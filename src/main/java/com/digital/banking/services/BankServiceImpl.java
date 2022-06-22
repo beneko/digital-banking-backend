@@ -5,6 +5,8 @@ import com.digital.banking.entities.CurrentAccount;
 import com.digital.banking.entities.Customer;
 import com.digital.banking.entities.SavingAccount;
 import com.digital.banking.enums.AccountStatus;
+import com.digital.banking.exceptions.AccountBalanceNotSufficientException;
+import com.digital.banking.exceptions.BankAccountNotFoundException;
 import com.digital.banking.exceptions.CustomerNotFoundException;
 import com.digital.banking.repositories.BankAccountRepository;
 import com.digital.banking.repositories.CustomerRepository;
@@ -72,17 +74,19 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public List<Customer> getCustomerList() {
-        return null;
+        return customerRepository.findAll();
     }
 
     @Override
-    public BankAccount getBankAccount(String accountId) {
-        return null;
+    public BankAccount getBankAccount(String accountId) throws BankAccountNotFoundException{
+        return bankAccountRepository.findById(accountId).orElseThrow(()-> new BankAccountNotFoundException("Bank Account not Found!"));
     }
 
     @Override
-    public void debit(String accountId, double amount, String description) {
-
+    public void debit(String accountId, double amount, String description) throws BankAccountNotFoundException, AccountBalanceNotSufficientException{
+        BankAccount bankAccount = getBankAccount(accountId);
+        if(bankAccount.getBalance() < amount )
+            throw new AccountBalanceNotSufficientException("Account balance is not sufficient!");
     }
 
     @Override
