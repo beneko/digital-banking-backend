@@ -4,6 +4,8 @@ import com.digital.banking.entities.BankAccount;
 import com.digital.banking.entities.CurrentAccount;
 import com.digital.banking.entities.Customer;
 import com.digital.banking.entities.SavingAccount;
+import com.digital.banking.enums.AccountStatus;
+import com.digital.banking.exceptions.CustomerNotFoundException;
 import com.digital.banking.repositories.BankAccountRepository;
 import com.digital.banking.repositories.CustomerRepository;
 import com.digital.banking.repositories.OperationRepository;
@@ -12,7 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -29,17 +33,40 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public Customer saveCustomer(Customer customer) {
-        return null;
+        log.info("Saving new Customer");
+        return customerRepository.save(customer);
     }
 
     @Override
-    public CurrentAccount saveCurrentAccount(Long customerId, double overDraft, double initialBalance) {
-        return null;
+    public CurrentAccount saveCurrentAccount(Long customerId, double overDraft, double initialBalance) throws CustomerNotFoundException{
+        Customer customer = customerRepository.findById(customerId).orElse(null);
+        if(customer==null){
+            throw new CustomerNotFoundException("Customer not found!");
+        }
+        CurrentAccount currentAccount = new CurrentAccount();
+        currentAccount.setId(UUID.randomUUID().toString());
+        currentAccount.setCustomer(customer);
+        currentAccount.setOverDraft(overDraft);
+        currentAccount.setBalance(initialBalance);
+        currentAccount.setCreatedAt(new Date());
+        currentAccount.setStatus(AccountStatus.CREATED);
+        return bankAccountRepository.save(currentAccount);
     }
 
     @Override
-    public SavingAccount saveSavingAccount(Long customerId, double overDraft, double interestRate) {
-        return null;
+    public SavingAccount saveSavingAccount(Long customerId, double interestRate, double initialBalance) throws CustomerNotFoundException{
+        Customer customer = customerRepository.findById(customerId).orElse(null);
+        if(customer==null){
+            throw new CustomerNotFoundException("Customer not found!");
+        }
+        SavingAccount savingAccount = new SavingAccount();
+        savingAccount.setId(UUID.randomUUID().toString());
+        savingAccount.setCustomer(customer);
+        savingAccount.setInterestRate(interestRate);
+        savingAccount.setBalance(initialBalance);
+        savingAccount.setCreatedAt(new Date());
+        savingAccount.setStatus(AccountStatus.CREATED);
+        return bankAccountRepository.save(savingAccount);
     }
 
 
