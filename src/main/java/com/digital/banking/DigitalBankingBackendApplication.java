@@ -27,7 +27,7 @@ public class DigitalBankingBackendApplication {
 			Stream.of("Jack", "Daniel", "Sam", "Bob").forEach(name->{
 				CustomerDTO customerDTO = new CustomerDTO();
 				customerDTO.setName(name);
-				customerDTO.setEmail(name.toLowerCase() + "gmail.com");
+				customerDTO.setEmail(name.toLowerCase() + "@gmail.com");
 				bankService.saveCustomer(customerDTO);
 			});
 			// create a current account and a saving account for every customer
