@@ -1,7 +1,6 @@
 package com.digital.banking;
 
 import com.digital.banking.dtos.CustomerDTO;
-import com.digital.banking.entities.Customer;
 import com.digital.banking.exceptions.AccountBalanceNotSufficientException;
 import com.digital.banking.exceptions.BankAccountNotFoundException;
 import com.digital.banking.exceptions.CustomerNotFoundException;
