@@ -12,12 +12,17 @@ import java.util.List;
 
 public interface BankService {
     CustomerDTO saveCustomer(CustomerDTO customerDTO);
+
+    void deleteCustomer(Long customerId);
+
     CurrentAccount saveCurrentAccount(Long customerId, double overDraft, double initialBalance) throws CustomerNotFoundException;
     SavingAccount saveSavingAccount(Long customerId, double interestRate, double initialBalance) throws CustomerNotFoundException;
 
     List<CustomerDTO> getCustomerList();
 
     CustomerDTO getCustomer(Long customerId) throws CustomerNotFoundException;
+
+    CustomerDTO updateCustomer(CustomerDTO customerDTO);
 
     List<BankAccount> getBankAccountList();
     BankAccount getBankAccount(String accountId) throws BankAccountNotFoundException;
