@@ -1,5 +1,6 @@
 package com.digital.banking;
 
+import com.digital.banking.dtos.CustomerDTO;
 import com.digital.banking.entities.Customer;
 import com.digital.banking.exceptions.AccountBalanceNotSufficientException;
 import com.digital.banking.exceptions.BankAccountNotFoundException;
@@ -24,10 +25,10 @@ public class DigitalBankingBackendApplication {
 		return args -> {
 			// create some customer
 			Stream.of("Jack", "Daniel", "Sam", "Bob").forEach(name->{
-				Customer customer = new Customer();
-				customer.setName(name);
-				customer.setEmail(name.toLowerCase() + "gmail.com");
-				bankService.saveCustomer(customer);
+				CustomerDTO customerDTO = new CustomerDTO();
+				customerDTO.setName(name);
+				customerDTO.setEmail(name.toLowerCase() + "gmail.com");
+				bankService.saveCustomer(customerDTO);
 			});
 			// create a current account and a saving account for every customer
 			bankService.getCustomerList().forEach(customer -> {

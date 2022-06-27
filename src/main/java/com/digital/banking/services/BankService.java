@@ -3,7 +3,6 @@ package com.digital.banking.services;
 import com.digital.banking.dtos.CustomerDTO;
 import com.digital.banking.entities.BankAccount;
 import com.digital.banking.entities.CurrentAccount;
-import com.digital.banking.entities.Customer;
 import com.digital.banking.entities.SavingAccount;
 import com.digital.banking.exceptions.AccountBalanceNotSufficientException;
 import com.digital.banking.exceptions.BankAccountNotFoundException;
@@ -12,7 +11,7 @@ import com.digital.banking.exceptions.CustomerNotFoundException;
 import java.util.List;
 
 public interface BankService {
-    Customer saveCustomer(Customer customer);
+    CustomerDTO saveCustomer(CustomerDTO customerDTO);
     CurrentAccount saveCurrentAccount(Long customerId, double overDraft, double initialBalance) throws CustomerNotFoundException;
     SavingAccount saveSavingAccount(Long customerId, double interestRate, double initialBalance) throws CustomerNotFoundException;
 

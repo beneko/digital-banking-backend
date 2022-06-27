@@ -37,9 +37,10 @@ public class BankServiceImpl implements BankService {
     //private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     @Override
-    public Customer saveCustomer(Customer customer) {
+    public CustomerDTO saveCustomer(CustomerDTO customerDTO) {
         log.info("Saving new Customer");
-        return customerRepository.save(customer);
+        Customer savedCustomer = customerRepository.save(bankMapper.toCustomer(customerDTO));
+        return bankMapper.fromCustomer(savedCustomer);
     }
 
     @Override
