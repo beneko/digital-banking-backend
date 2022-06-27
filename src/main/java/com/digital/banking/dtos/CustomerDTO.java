@@ -1,4 +1,4 @@
-package com.digital.banking.mappers;
+package com.digital.banking.dtos;
 
 import lombok.Data;
 
