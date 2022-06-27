@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -90,6 +89,11 @@ public class BankServiceImpl implements BankService {
         return customerRepository.findAll().stream()
                 .map(customer -> bankMapper.fromCustomer(customer))
                 .collect(Collectors.toList());
+    }
+    @Override
+    public CustomerDTO getCustomer(Long customerId) throws CustomerNotFoundException {
+        Customer customer = customerRepository.findById(customerId).orElseThrow(()-> new CustomerNotFoundException("Customer not found!"));
+        return bankMapper.fromCustomer(customer);
     }
 
     @Override
