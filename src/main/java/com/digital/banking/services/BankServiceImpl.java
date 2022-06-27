@@ -1,11 +1,13 @@
 package com.digital.banking.services;
 
+import com.digital.banking.dtos.CustomerDTO;
 import com.digital.banking.entities.*;
 import com.digital.banking.enums.AccountStatus;
 import com.digital.banking.enums.OperationType;
 import com.digital.banking.exceptions.AccountBalanceNotSufficientException;
 import com.digital.banking.exceptions.BankAccountNotFoundException;
 import com.digital.banking.exceptions.CustomerNotFoundException;
+import com.digital.banking.mappers.BankMapper;
 import com.digital.banking.repositories.BankAccountRepository;
 import com.digital.banking.repositories.CustomerRepository;
 import com.digital.banking.repositories.OperationRepository;
@@ -14,9 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -28,6 +32,8 @@ public class BankServiceImpl implements BankService {
     private CustomerRepository customerRepository;
     private BankAccountRepository bankAccountRepository;
     private OperationRepository operationRepository;
+
+    private BankMapper bankMapper;
 
     //private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
@@ -71,8 +77,19 @@ public class BankServiceImpl implements BankService {
 
 
     @Override
-    public List<Customer> getCustomerList() {
-        return customerRepository.findAll();
+    public List<CustomerDTO> getCustomerList() {
+
+        /* imperative programming
+        List<CustomerDTO> customerDTOS = new ArrayList<>();
+        customerRepository.findAll().forEach(customer -> {
+            customerDTOS.add(bankMapper.fromCustomer(customer));
+        });
+         */
+
+        // functional programming
+        return customerRepository.findAll().stream()
+                .map(customer -> bankMapper.fromCustomer(customer))
+                .collect(Collectors.toList());
     }
 
     @Override
