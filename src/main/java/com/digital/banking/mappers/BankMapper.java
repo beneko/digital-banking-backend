@@ -5,5 +5,5 @@ import com.digital.banking.entities.Customer;
 
 public interface BankMapper {
     CustomerDTO fromCustomer(Customer customer);
-    Customer fromCustomerDTO(CustomerDTO customerDTO);
+    Customer toCustomer(CustomerDTO customerDTO);
 }

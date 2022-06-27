@@ -15,7 +15,7 @@ public class BankMapperImpl implements BankMapper{
         return customerDTO;
     }
     @Override
-    public Customer fromCustomerDTO(CustomerDTO customerDTO){
+    public Customer toCustomer(CustomerDTO customerDTO){
         Customer customer = new Customer();
         BeanUtils.copyProperties(customerDTO, customer);
         return customer;
