@@ -1,6 +1,6 @@
 package com.digital.banking.web;
 
-import com.digital.banking.entities.Customer;
+import com.digital.banking.dtos.CustomerDTO;
 import com.digital.banking.services.BankService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ public class CustomerRestController {
     private BankService bankService;
 
     @GetMapping("/customers")
-    public List<Customer> customers(){
+    public List<CustomerDTO> customers(){
         return bankService.getCustomerList();
     }
 }
