@@ -1,10 +1,8 @@
 package com.digital.banking.services;
 
-import com.digital.banking.entities.BankAccount;
-import com.digital.banking.entities.CurrentAccount;
-import com.digital.banking.entities.Customer;
-import com.digital.banking.entities.SavingAccount;
+import com.digital.banking.entities.*;
 import com.digital.banking.enums.AccountStatus;
+import com.digital.banking.enums.OperationType;
 import com.digital.banking.exceptions.AccountBalanceNotSufficientException;
 import com.digital.banking.exceptions.BankAccountNotFoundException;
 import com.digital.banking.exceptions.CustomerNotFoundException;
@@ -87,11 +85,29 @@ public class BankServiceImpl implements BankService {
         BankAccount bankAccount = getBankAccount(accountId);
         if(bankAccount.getBalance() < amount )
             throw new AccountBalanceNotSufficientException("Account balance is not sufficient!");
+        Operation operation = new Operation();
+        operation.setType(OperationType.DEBIT);
+        operation.setAmount(amount);
+        operation.setDescription(description);
+        operation.setOperationDate(new Date());
+        operation.setBankAccount(bankAccount);
+        operationRepository.save(operation);
+        bankAccount.setBalance(bankAccount.getBalance() - amount);
+        bankAccountRepository.save(bankAccount);
     }
 
     @Override
-    public void credit(String accountId, double amount, String description) {
-
+    public void credit(String accountId, double amount, String description) throws BankAccountNotFoundException{
+        BankAccount bankAccount = getBankAccount(accountId);
+        Operation operation = new Operation();
+        operation.setType(OperationType.CREDIT);
+        operation.setAmount(amount);
+        operation.setDescription(description);
+        operation.setOperationDate(new Date());
+        operation.setBankAccount(bankAccount);
+        operationRepository.save(operation);
+        bankAccount.setBalance(bankAccount.getBalance() + amount);
+        bankAccountRepository.save(bankAccount);
     }
 
     @Override
