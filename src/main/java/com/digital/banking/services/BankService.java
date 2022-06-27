@@ -25,7 +25,7 @@ public interface BankService {
 
     CustomerDTO updateCustomer(CustomerDTO customerDTO);
 
-    List<BankAccount> getBankAccountList();
+    List<BankAccountDTO> getBankAccountList();
     BankAccountDTO getBankAccount(String accountId) throws BankAccountNotFoundException;
     void debit(String accountId, double amount, String description) throws BankAccountNotFoundException, AccountBalanceNotSufficientException;
     void credit(String accountId, double amount, String description) throws BankAccountNotFoundException, AccountBalanceNotSufficientException;

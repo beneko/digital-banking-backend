@@ -114,8 +114,18 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public List<BankAccount> getBankAccountList() {
-        return bankAccountRepository.findAll();
+    public List<BankAccountDTO> getBankAccountList() {
+        return bankAccountRepository.findAll().stream()
+                .map(account -> {
+            if(account instanceof SavingAccount){
+                SavingAccount savingAccount = (SavingAccount) account;
+                return bankMapper.fromSavingAccount(savingAccount);
+            } else {
+                CurrentAccount currentAccount = (CurrentAccount) account;
+                return bankMapper.fromCurrentAccount((currentAccount));
+            }
+        })
+                .collect(Collectors.toList());
     }
 
     @Override
