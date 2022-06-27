@@ -1,6 +1,8 @@
 package com.digital.banking.services;
 
+import com.digital.banking.dtos.CurrentBankAccountDTO;
 import com.digital.banking.dtos.CustomerDTO;
+import com.digital.banking.dtos.SavingBankAccountDTO;
 import com.digital.banking.entities.BankAccount;
 import com.digital.banking.entities.CurrentAccount;
 import com.digital.banking.entities.SavingAccount;
@@ -15,8 +17,8 @@ public interface BankService {
 
     void deleteCustomer(Long customerId);
 
-    CurrentAccount saveCurrentAccount(Long customerId, double overDraft, double initialBalance) throws CustomerNotFoundException;
-    SavingAccount saveSavingAccount(Long customerId, double interestRate, double initialBalance) throws CustomerNotFoundException;
+    CurrentBankAccountDTO saveCurrentAccount(Long customerId, double overDraft, double initialBalance) throws CustomerNotFoundException;
+    SavingBankAccountDTO saveSavingAccount(Long customerId, double interestRate, double initialBalance) throws CustomerNotFoundException;
 
     List<CustomerDTO> getCustomerList();
 

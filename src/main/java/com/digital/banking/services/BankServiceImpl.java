@@ -1,6 +1,8 @@
 package com.digital.banking.services;
 
+import com.digital.banking.dtos.CurrentBankAccountDTO;
 import com.digital.banking.dtos.CustomerDTO;
+import com.digital.banking.dtos.SavingBankAccountDTO;
 import com.digital.banking.entities.*;
 import com.digital.banking.enums.AccountStatus;
 import com.digital.banking.enums.OperationType;
@@ -57,7 +59,7 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public CurrentAccount saveCurrentAccount(Long customerId, double overDraft, double initialBalance) throws CustomerNotFoundException{
+    public CurrentBankAccountDTO saveCurrentAccount(Long customerId, double overDraft, double initialBalance) throws CustomerNotFoundException{
         Customer customer = customerRepository.findById(customerId).orElse(null);
         if(customer==null){
             throw new CustomerNotFoundException("Customer not found!");
@@ -69,11 +71,11 @@ public class BankServiceImpl implements BankService {
         currentAccount.setBalance(initialBalance);
         currentAccount.setCreatedAt(new Date());
         currentAccount.setStatus(AccountStatus.CREATED);
-        return bankAccountRepository.save(currentAccount);
+        return bankMapper.fromCurrentAccount(bankAccountRepository.save(currentAccount));
     }
 
     @Override
-    public SavingAccount saveSavingAccount(Long customerId, double interestRate, double initialBalance) throws CustomerNotFoundException{
+    public SavingBankAccountDTO saveSavingAccount(Long customerId, double interestRate, double initialBalance) throws CustomerNotFoundException{
         Customer customer = customerRepository.findById(customerId).orElse(null);
         if(customer==null){
             throw new CustomerNotFoundException("Customer not found!");
@@ -85,7 +87,7 @@ public class BankServiceImpl implements BankService {
         savingAccount.setBalance(initialBalance);
         savingAccount.setCreatedAt(new Date());
         savingAccount.setStatus(AccountStatus.CREATED);
-        return bankAccountRepository.save(savingAccount);
+        return bankMapper.fromSavingAccount(bankAccountRepository.save(savingAccount));
     }
 
 
