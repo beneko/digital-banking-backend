@@ -1,5 +1,6 @@
 package com.digital.banking.services;
 
+import com.digital.banking.dtos.BankAccountDTO;
 import com.digital.banking.dtos.CurrentBankAccountDTO;
 import com.digital.banking.dtos.CustomerDTO;
 import com.digital.banking.dtos.SavingBankAccountDTO;
@@ -118,13 +119,18 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public BankAccount getBankAccount(String accountId) throws BankAccountNotFoundException{
-        return bankAccountRepository.findById(accountId).orElseThrow(()-> new BankAccountNotFoundException("Bank Account not Found!"));
+    public BankAccountDTO getBankAccount(String accountId) throws BankAccountNotFoundException{
+        BankAccount bankAccount = bankAccountRepository.findById(accountId).orElseThrow(()-> new BankAccountNotFoundException("Bank Account not Found!"));
+        if(bankAccount instanceof CurrentAccount){
+            return bankMapper.fromCurrentAccount((CurrentAccount) bankAccount);
+        } else {
+            return bankMapper.fromSavingAccount(((SavingAccount) bankAccount));
+        }
     }
 
     @Override
     public void debit(String accountId, double amount, String description) throws BankAccountNotFoundException, AccountBalanceNotSufficientException{
-        BankAccount bankAccount = getBankAccount(accountId);
+        BankAccount bankAccount = bankAccountRepository.findById(accountId).orElseThrow(()-> new BankAccountNotFoundException("Bank Account not Found!"));
         if(bankAccount.getBalance() < amount )
             throw new AccountBalanceNotSufficientException("Account balance is not sufficient!");
         Operation operation = new Operation();
@@ -140,7 +146,7 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public void credit(String accountId, double amount, String description) throws BankAccountNotFoundException{
-        BankAccount bankAccount = getBankAccount(accountId);
+        BankAccount bankAccount = bankAccountRepository.findById(accountId).orElseThrow(()-> new BankAccountNotFoundException("Bank Account not Found!"));
         Operation operation = new Operation();
         operation.setType(OperationType.CREDIT);
         operation.setAmount(amount);
