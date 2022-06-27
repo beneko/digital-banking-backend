@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public abstract class CurrentBankAccountDTO {
+public class CurrentBankAccountDTO {
     private String id;
     private double balance;
     private Date createdAt;
