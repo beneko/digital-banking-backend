@@ -55,7 +55,9 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public void deleteCustomer(Long customerId){
+    public void deleteCustomer(Long customerId) throws CustomerNotFoundException {
+        if(!customerRepository.existsById(customerId))
+            throw new CustomerNotFoundException();
         log.info("Deleting customer");
         customerRepository.deleteById(customerId);
     }

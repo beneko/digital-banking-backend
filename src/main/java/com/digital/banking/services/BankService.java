@@ -10,7 +10,7 @@ import java.util.List;
 public interface BankService {
     CustomerDTO saveCustomer(CustomerDTO customerDTO);
 
-    void deleteCustomer(Long customerId);
+    void deleteCustomer(Long customerId) throws CustomerNotFoundException;
 
     CurrentBankAccountDTO saveCurrentAccount(Long customerId, double overDraft, double initialBalance) throws CustomerNotFoundException;
     SavingBankAccountDTO saveSavingAccount(Long customerId, double interestRate, double initialBalance) throws CustomerNotFoundException;
