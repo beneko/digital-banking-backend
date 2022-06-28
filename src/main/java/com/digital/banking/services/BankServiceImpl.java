@@ -171,8 +171,13 @@ public class BankServiceImpl implements BankService {
     @Override
     public OperationDTO debit(String accountId, double amount, String description) throws BankAccountNotFoundException, AccountBalanceNotSufficientException{
         BankAccount bankAccount = bankAccountRepository.findById(accountId).orElseThrow(BankAccountNotFoundException::new);
-        if(bankAccount.getBalance() < amount )
-            throw new AccountBalanceNotSufficientException();
+        if(bankAccount instanceof CurrentAccount){
+            if(bankAccount.getBalance() + ((CurrentAccount) bankAccount).getOverDraft() < amount)
+                throw new AccountBalanceNotSufficientException();
+        }else {
+            if(bankAccount.getBalance() < amount)
+                throw new AccountBalanceNotSufficientException();
+        }
         Operation operation = new Operation();
         operation.setType(OperationType.DEBIT);
         operation.setAmount(amount);
@@ -202,6 +207,10 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public OperationDTO transfer(String accountIdSource, String accountIdDestination, double amount) throws BankAccountNotFoundException, AccountBalanceNotSufficientException {
+        if(!bankAccountRepository.existsById(accountIdSource))
+            throw new BankAccountNotFoundException("source account not found!");
+        if(!bankAccountRepository.existsById(accountIdDestination))
+            throw new BankAccountNotFoundException("destination account not found!");
         OperationDTO debit = debit(accountIdSource, amount, "Transferred to " + accountIdDestination);
         credit(accountIdDestination, amount,"Transferred from " + accountIdSource);
         return debit;
