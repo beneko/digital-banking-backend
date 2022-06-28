@@ -30,6 +30,7 @@ public class BankMapperImpl implements BankMapper{
         BeanUtils.copyProperties(savingAccount, savingBankAccountDTO);
         // manually transfer Customer to savingBankAccountDTO
         savingBankAccountDTO.setCustomerDTO(fromCustomer(savingAccount.getCustomer()));
+        savingBankAccountDTO.setType(savingAccount.getClass().getSimpleName());
         return savingBankAccountDTO;
     }
     @Override
@@ -46,6 +47,7 @@ public class BankMapperImpl implements BankMapper{
         BeanUtils.copyProperties(currentAccount, currentBankAccountDTO);
         // manually transfer Customer to currentBankAccountDTO
         currentBankAccountDTO.setCustomerDTO(fromCustomer(currentAccount.getCustomer()));
+        currentBankAccountDTO.setType(currentAccount.getClass().getSimpleName());
         return currentBankAccountDTO;
 
     }
