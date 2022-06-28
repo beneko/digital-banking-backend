@@ -3,6 +3,7 @@ package com.digital.banking.web;
 import com.digital.banking.dtos.AccountHistoryDTO;
 import com.digital.banking.dtos.BankAccountDTO;
 import com.digital.banking.dtos.OperationDTO;
+import com.digital.banking.exceptions.AccountBalanceNotSufficientException;
 import com.digital.banking.exceptions.BankAccountNotFoundException;
 import com.digital.banking.services.BankService;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @AllArgsConstructor
@@ -36,4 +38,11 @@ public class BankAccountRestController {
                                                @RequestParam(name = "limit", defaultValue = "10") int limit) throws BankAccountNotFoundException {
         return bankService.getAccountHistory(accountId, offset, limit);
     }
+    @PostMapping("/accounts/{accountId}/transfer")
+    public OperationDTO transfer(@PathVariable(name = "accountId") String accountIdSource,
+                         @RequestParam(name = "accountIdDestination") String accountIdDestination,
+                         @RequestParam(name = "amount") double amount) throws BankAccountNotFoundException, AccountBalanceNotSufficientException {
+        return bankService.transfer(accountIdSource, accountIdDestination, amount);
+    }
+
 }
