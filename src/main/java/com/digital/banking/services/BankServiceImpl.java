@@ -1,9 +1,6 @@
 package com.digital.banking.services;
 
-import com.digital.banking.dtos.BankAccountDTO;
-import com.digital.banking.dtos.CurrentBankAccountDTO;
-import com.digital.banking.dtos.CustomerDTO;
-import com.digital.banking.dtos.SavingBankAccountDTO;
+import com.digital.banking.dtos.*;
 import com.digital.banking.entities.*;
 import com.digital.banking.enums.AccountStatus;
 import com.digital.banking.enums.OperationType;
@@ -136,6 +133,13 @@ public class BankServiceImpl implements BankService {
         } else {
             return bankMapper.fromSavingAccount(((SavingAccount) bankAccount));
         }
+    }
+
+    @Override
+    public List<OperationDTO> getOperationList(String accountId){
+        return operationRepository.findByBankAccountId(accountId).stream()
+                .map(operation -> bankMapper.fromOperation(operation))
+                .collect(Collectors.toList());
     }
 
     @Override
