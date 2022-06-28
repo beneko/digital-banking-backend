@@ -1,7 +1,7 @@
 package com.digital.banking.web;
 
 import com.digital.banking.dtos.BankAccountDTO;
-import com.digital.banking.entities.BankAccount;
+import com.digital.banking.dtos.OperationDTO;
 import com.digital.banking.exceptions.BankAccountNotFoundException;
 import com.digital.banking.services.BankService;
 import lombok.AllArgsConstructor;
@@ -27,5 +27,9 @@ public class BankAccountRestController {
     @GetMapping("/accounts/{accountId}")
     public BankAccountDTO getBankAccount(@PathVariable String accountId) throws BankAccountNotFoundException {
         return bankService.getBankAccount(accountId);
+    }
+    @GetMapping("/accounts/{accountId}/operations")
+    public List<OperationDTO> getAccountOperationHistory(@PathVariable String accountId){
+        return bankService.getOperationList(accountId);
     }
 }
