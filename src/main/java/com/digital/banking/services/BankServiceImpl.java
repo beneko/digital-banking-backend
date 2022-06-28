@@ -13,6 +13,9 @@ import com.digital.banking.repositories.CustomerRepository;
 import com.digital.banking.repositories.OperationRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -143,6 +146,24 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
+    public AccountHistoryDTO getAccountHistory(String accountId, int offset, int limit) throws BankAccountNotFoundException{
+        BankAccount bankAccount = bankAccountRepository.findById(accountId).orElseThrow(() -> new BankAccountNotFoundException("Bank Account not Found!"));
+        Page<Operation> operationPage = operationRepository.findByBankAccountId(accountId, PageRequest.of(offset, limit));
+        List<OperationDTO> operationDTOList = operationPage.getContent()
+                .stream()
+                .map(operation -> bankMapper.fromOperation(operation))
+                .collect(Collectors.toList());
+        AccountHistoryDTO accountHistoryDTO = new AccountHistoryDTO();
+        accountHistoryDTO.setAccountId(bankAccount.getId());
+        accountHistoryDTO.setBalance(bankAccount.getBalance());
+        accountHistoryDTO.setOffset(offset);
+        accountHistoryDTO.setLimit(limit);
+        accountHistoryDTO.setTotalPages(operationPage.getTotalPages());
+        accountHistoryDTO.setOperationDTOs(operationDTOList);
+        return accountHistoryDTO;
+    }
+
+    @Override
     public void debit(String accountId, double amount, String description) throws BankAccountNotFoundException, AccountBalanceNotSufficientException{
         BankAccount bankAccount = bankAccountRepository.findById(accountId).orElseThrow(()-> new BankAccountNotFoundException("Bank Account not Found!"));
         if(bankAccount.getBalance() < amount )
@@ -177,4 +198,5 @@ public class BankServiceImpl implements BankService {
         debit(accountIdSource, amount,"Transfer to " + accountIdDestination);
         credit(accountIdDestination, amount,"Transfer from " + accountIdSource);
     }
+
 }
