@@ -2,9 +2,11 @@ package com.digital.banking.mappers;
 
 import com.digital.banking.dtos.CurrentBankAccountDTO;
 import com.digital.banking.dtos.CustomerDTO;
+import com.digital.banking.dtos.OperationDTO;
 import com.digital.banking.dtos.SavingBankAccountDTO;
 import com.digital.banking.entities.CurrentAccount;
 import com.digital.banking.entities.Customer;
+import com.digital.banking.entities.Operation;
 import com.digital.banking.entities.SavingAccount;
 
 public interface BankMapper {
@@ -18,4 +20,8 @@ public interface BankMapper {
     CurrentBankAccountDTO fromCurrentAccount(CurrentAccount currentAccount);
 
     CurrentAccount toCurrentAccount(CurrentBankAccountDTO currentBankAccountDTO);
+
+    OperationDTO fromOperation(Operation operation);
+
+    Operation toOperation(OperationDTO operationDTO);
 }

@@ -2,9 +2,11 @@ package com.digital.banking.mappers;
 
 import com.digital.banking.dtos.CurrentBankAccountDTO;
 import com.digital.banking.dtos.CustomerDTO;
+import com.digital.banking.dtos.OperationDTO;
 import com.digital.banking.dtos.SavingBankAccountDTO;
 import com.digital.banking.entities.CurrentAccount;
 import com.digital.banking.entities.Customer;
+import com.digital.banking.entities.Operation;
 import com.digital.banking.entities.SavingAccount;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -59,5 +61,18 @@ public class BankMapperImpl implements BankMapper{
         // manually transfer CustomerDTO to currentAccount
         currentAccount.setCustomer(toCustomer(currentBankAccountDTO.getCustomerDTO()));
         return currentAccount;
+    }
+
+    @Override
+    public OperationDTO fromOperation(Operation operation){
+        OperationDTO operationDTO = new OperationDTO();
+        BeanUtils.copyProperties(operation, operationDTO);
+        return operationDTO;
+    }
+    @Override
+    public Operation toOperation(OperationDTO operationDTO){
+        Operation operation = new Operation();
+        BeanUtils.copyProperties(operationDTO, operation);
+        return operation;
     }
 }
