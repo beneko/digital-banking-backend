@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @AllArgsConstructor
@@ -29,7 +28,7 @@ public class BankAccountRestController {
         return bankService.getBankAccount(accountId);
     }
     @GetMapping("/accounts/{accountId}/operations")
-    public List<OperationDTO> getAccountOperationHistory(@PathVariable String accountId){
+    public List<OperationDTO> getAccountOperationHistory(@PathVariable String accountId) throws BankAccountNotFoundException{
         return bankService.getOperationList(accountId);
     }
     @GetMapping("/accounts/{accountId}/pageOperation")
