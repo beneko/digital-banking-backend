@@ -29,7 +29,7 @@ public class CustomerRestController {
         return bankService.saveCustomer(customerDTO);
     }
     @PutMapping("/customers/{customerId}")
-    public CustomerDTO updateCustomers(@PathVariable Long customerId, @RequestBody CustomerDTO customerDTO){
+    public CustomerDTO updateCustomers(@PathVariable Long customerId, @RequestParam CustomerDTO customerDTO) throws CustomerNotFoundException {
         customerDTO.setId(customerId);
         return bankService.updateCustomer(customerDTO);
     }

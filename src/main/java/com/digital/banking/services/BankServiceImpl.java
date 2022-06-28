@@ -46,7 +46,9 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public CustomerDTO updateCustomer(CustomerDTO customerDTO){
+    public CustomerDTO updateCustomer(CustomerDTO customerDTO) throws CustomerNotFoundException{
+        if(!customerRepository.existsById(customerDTO.getId()))
+            throw new CustomerNotFoundException();
         log.info("Updating customer");
         Customer updatedCustomer = customerRepository.save(bankMapper.toCustomer(customerDTO));
         return bankMapper.fromCustomer(updatedCustomer);

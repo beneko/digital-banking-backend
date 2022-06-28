@@ -19,7 +19,7 @@ public interface BankService {
 
     CustomerDTO getCustomer(Long customerId) throws CustomerNotFoundException;
 
-    CustomerDTO updateCustomer(CustomerDTO customerDTO);
+    CustomerDTO updateCustomer(CustomerDTO customerDTO) throws CustomerNotFoundException;
 
     List<BankAccountDTO> getBankAccountList();
     BankAccountDTO getBankAccount(String accountId) throws BankAccountNotFoundException;
