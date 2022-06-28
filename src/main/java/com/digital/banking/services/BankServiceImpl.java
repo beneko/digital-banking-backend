@@ -15,7 +15,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -164,7 +163,7 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public void debit(String accountId, double amount, String description) throws BankAccountNotFoundException, AccountBalanceNotSufficientException{
+    public OperationDTO debit(String accountId, double amount, String description) throws BankAccountNotFoundException, AccountBalanceNotSufficientException{
         BankAccount bankAccount = bankAccountRepository.findById(accountId).orElseThrow(()-> new BankAccountNotFoundException("Bank Account not Found!"));
         if(bankAccount.getBalance() < amount )
             throw new AccountBalanceNotSufficientException("Account balance is not sufficient!");
@@ -174,13 +173,14 @@ public class BankServiceImpl implements BankService {
         operation.setDescription(description);
         operation.setOperationDate(new Date());
         operation.setBankAccount(bankAccount);
-        operationRepository.save(operation);
+        Operation savedOperation = operationRepository.save(operation);
         bankAccount.setBalance(bankAccount.getBalance() - amount);
         bankAccountRepository.save(bankAccount);
+        return bankMapper.fromOperation(savedOperation);
     }
 
     @Override
-    public void credit(String accountId, double amount, String description) throws BankAccountNotFoundException{
+    public OperationDTO credit(String accountId, double amount, String description) throws BankAccountNotFoundException{
         BankAccount bankAccount = bankAccountRepository.findById(accountId).orElseThrow(()-> new BankAccountNotFoundException("Bank Account not Found!"));
         Operation operation = new Operation();
         operation.setType(OperationType.CREDIT);
@@ -188,15 +188,17 @@ public class BankServiceImpl implements BankService {
         operation.setDescription(description);
         operation.setOperationDate(new Date());
         operation.setBankAccount(bankAccount);
-        operationRepository.save(operation);
+        Operation savedOperation = operationRepository.save(operation);
         bankAccount.setBalance(bankAccount.getBalance() + amount);
         bankAccountRepository.save(bankAccount);
+        return bankMapper.fromOperation(savedOperation);
     }
 
     @Override
-    public void transfer(String accountIdSource, String accountIdDestination, double amount) throws BankAccountNotFoundException, AccountBalanceNotSufficientException {
-        debit(accountIdSource, amount,"Transfer to " + accountIdDestination);
-        credit(accountIdDestination, amount,"Transfer from " + accountIdSource);
+    public OperationDTO transfer(String accountIdSource, String accountIdDestination, double amount) throws BankAccountNotFoundException, AccountBalanceNotSufficientException {
+        OperationDTO debit = debit(accountIdSource, amount, "Transferred to " + accountIdDestination);
+        credit(accountIdDestination, amount,"Transferred from " + accountIdSource);
+        return debit;
     }
 
 }

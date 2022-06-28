@@ -1,7 +1,6 @@
 package com.digital.banking.services;
 
 import com.digital.banking.dtos.*;
-import com.digital.banking.entities.BankAccount;
 import com.digital.banking.exceptions.AccountBalanceNotSufficientException;
 import com.digital.banking.exceptions.BankAccountNotFoundException;
 import com.digital.banking.exceptions.CustomerNotFoundException;
@@ -27,9 +26,9 @@ public interface BankService {
 
     List<OperationDTO> getOperationList(String accountId);
 
-    void debit(String accountId, double amount, String description) throws BankAccountNotFoundException, AccountBalanceNotSufficientException;
-    void credit(String accountId, double amount, String description) throws BankAccountNotFoundException, AccountBalanceNotSufficientException;
-    void transfer(String accountIdSource, String accountIdDestination, double amount) throws BankAccountNotFoundException, AccountBalanceNotSufficientException;
+    OperationDTO debit(String accountId, double amount, String description) throws BankAccountNotFoundException, AccountBalanceNotSufficientException;
+    OperationDTO credit(String accountId, double amount, String description) throws BankAccountNotFoundException, AccountBalanceNotSufficientException;
+    OperationDTO transfer(String accountIdSource, String accountIdDestination, double amount) throws BankAccountNotFoundException, AccountBalanceNotSufficientException;
 
     AccountHistoryDTO getAccountHistory(String accountId, int offset, int limit) throws BankAccountNotFoundException;
 }
