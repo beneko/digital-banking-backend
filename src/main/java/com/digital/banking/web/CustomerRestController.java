@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Slf4j
 @RequestMapping("/v1")
+@CrossOrigin("*")
 public class CustomerRestController {
     private BankService bankService;
 
