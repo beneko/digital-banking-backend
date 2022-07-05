@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -166,6 +167,14 @@ public class BankServiceImpl implements BankService {
         accountHistoryDTO.setTotalPages(operationPage.getTotalPages());
         accountHistoryDTO.setOperationDTOs(operationDTOList);
         return accountHistoryDTO;
+    }
+
+    @Override
+    public List<CustomerDTO> searchCustomers(String keyword) {
+        return customerRepository.findByNameIgnoreCaseContains(keyword)
+                .stream()
+                .map(customer -> bankMapper.fromCustomer(customer))
+                .collect(Collectors.toList());
     }
 
     @Override
